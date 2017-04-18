@@ -1,0 +1,34 @@
+import serializeJSON from '../utils/serializeJSON';
+import getIntranetAddress from './intranetAddress';
+
+function logout(intranetAddress) {
+    const logoutURL = 'http://61.137.86.87:8080/portalNat444/AccessServices/logout'
+    const referURL = 'http://61.137.86.87:8080/portalNat444/main2.jsp'
+
+    // getIntranetAddress();
+    ////////tmp
+    intranetAddress = intranetAddress || '10.96.37.104';
+    
+    // FormData 使用方式暂不清楚
+    // let formData = new FormData();
+    let formData = {
+        brasAddress: '59df7586',
+        userIntranetAddress: intranetAddress
+    }
+
+    fetch(logoutURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': referURL
+        },
+        body: serializeJSON(formData)
+    }).then(function(response) {
+        // console.log(response);
+        return response.json();
+    }).then(function(data) {
+        console.log(data);
+    }).catch(function(err) {});
+}
+
+export default logout;
