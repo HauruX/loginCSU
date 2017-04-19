@@ -6,23 +6,15 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight,
-    TouchableOpacity
 } from 'react-native';
 
-import logout from './fetch/logout';
-import login from './fetch/login';
+import LoginComponent from './components/LoginComponent';
 
 export default class Index extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={[styles.btn, styles.btnUnabled]} disabled={false} onPress={() => { login('013901130508', '306217')}}>
-                    <Text style={styles.btnText}>login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, styles.btnUnabled]} disabled={false} onPress={() => { logout()}}>
-                    <Text style={styles.btnText}>logout</Text>
-                </TouchableOpacity>
+                <LoginComponent></LoginComponent>
             </View>
         );
     }

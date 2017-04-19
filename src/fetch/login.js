@@ -1,7 +1,7 @@
 import serializeJSON from '../utils/serializeJSON';
 import RSAUtils from '../utils/security';
 
-function login(accountID, password) {
+function login(accountID, password, callback) {
     const louginURL = 'http://61.137.86.87:8080/portalNat444/AccessServices/login';
     const referURL = 'http://61.137.86.87:8080/portalNat444/main.jsp';
     const brasAddress = '59df7586';
@@ -30,7 +30,9 @@ function login(accountID, password) {
         // console.log(response);
         return response.json();
     }).then(function(data) {
-        console.log(data);
+        // console.log(data);
+        // return data;
+        callback(data);
     }).catch(function(err) {});
 }
 
