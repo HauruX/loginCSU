@@ -8,10 +8,13 @@ import {
     View,
     TouchableOpacity,
     TextInput,
+    Alert
 } from 'react-native';
-import CheckBox from 'react-native-check-box';
+import CheckBox from './react-native-check-box';
 
 import login from '../fetch/login';
+// import {test} from '../fetch/login';
+// import skipToLogin from '../fetch/skipToLogin';
 
 export default class LoginComponent extends Component {
     constructor(props) {
@@ -19,7 +22,9 @@ export default class LoginComponent extends Component {
         this.state = {
             btnEnable: true,
             accountID: '',
-            password: ''
+            password: '',
+            rememberPwd: false,
+            autoLogin: false
         }
     }
     render() {
@@ -28,11 +33,13 @@ export default class LoginComponent extends Component {
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => { this.setState({ accountID: text }) }}
+                    value={this.state.accountID}
                     placeholder={'账号'}
                     clearButtonMode={'while-editing'}/>
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => { this.setState({ password: text }) }}
+                    value={this.state.password}
                     placeholder={'密码'}
                     password={true}
                     clearButtonMode={'while-editing'} />
@@ -41,16 +48,14 @@ export default class LoginComponent extends Component {
                         leftText={'记住密码'}
                         leftTextStyle={{fontSize: 15}}
                         style={styles.checkBox}
-                        isChecked={true}
-                        label={'label'}
-                        onClick={(checked) => console.log('I am checked', checked)}/>
+                        isChecked={this.state.rememberPwd}
+                        onClick={this.rememberPwdHandler.bind(this)}/>
                     <CheckBox
                         leftText={'自动登录'}
                         leftTextStyle={{fontSize: 15}}
                         style={styles.checkBox}
-                        isChecked={true}
-                        label={'label'}
-                        onClick={(checked) => console.log('I am checked', checked)}/>
+                        isChecked={this.state.autoLogin}
+                        onClick={this.autoLoginHandler.bind(this)}/>
                 </View>
                 <TouchableOpacity
                     style={this.state.btnEnable ? styles.btn : [styles.btn, styles.btnUnabled]}
@@ -61,11 +66,51 @@ export default class LoginComponent extends Component {
             </View>
         );
     }
+
+    componentDidMount() {
+        // 登陆账户、密码恢复
+        storage.load({
+            key: 'userInfo',
+            autoSync: true,
+            syncInBackground: true,
+        }).then(userInfo => {
+            console.log(userInfo);
+            this.setState({
+                accountID: userInfo.accountID && userInfo.accountID,
+                password: userInfo.password && userInfo.password,
+                rememberPwd: userInfo.rememberPwd && userInfo.rememberPwd,
+                autoLogin: userInfo.autoLogin && userInfo.autoLogin
+            })
+        }).catch(err => {
+            console.warn(err.message);
+        })
+    }    
     loginBtnHandler() {
-        this.setState({
-            btnEnable: false
+        // this.setState({
+        //     btnEnable: false
+        // });
+        storage.save({
+            key: 'userInfo',
+            rawData: {
+                accountID: this.state.accountID,
+                password: this.state.rememberPwd ? this.state.password : '',
+                rememberPwd: this.state.rememberPwd,
+                autoLogin: this.state.autoLogin
+            },
         });
-        login(this.state.accountID, this.state.password, (data)=>{console.log(data);});
+        login(this.state.accountID, this.state.password, (data)=>{this.props.refreshNetState()});
+    }
+    rememberPwdHandler() {
+        this.setState({
+            autoLogin: !this.state.rememberPwd && this.state.autoLogin,
+            rememberPwd: !this.state.rememberPwd
+        });
+    }
+    autoLoginHandler() {
+        this.setState({
+            rememberPwd: !this.state.autoLogin || this.state.rememberPwd,
+            autoLogin: !this.state.autoLogin
+        });
     }
 }
 
