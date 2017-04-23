@@ -13,8 +13,7 @@ import {
 import CheckBox from './react-native-check-box';
 
 import login from '../fetch/login';
-// import {test} from '../fetch/login';
-// import skipToLogin from '../fetch/skipToLogin';
+import {getUserInfo, setUserInfo} from '../fetch/localStore';
 
 export default class LoginComponent extends Component {
     constructor(props) {
@@ -69,35 +68,25 @@ export default class LoginComponent extends Component {
 
     componentDidMount() {
         // 登陆账户、密码恢复
-        storage.load({
-            key: 'userInfo',
-            autoSync: true,
-            syncInBackground: true,
-        }).then(userInfo => {
-            console.log(userInfo);
+        getUserInfo(userInfo => {
             this.setState({
                 accountID: userInfo.accountID && userInfo.accountID,
                 password: userInfo.password && userInfo.password,
                 rememberPwd: userInfo.rememberPwd && userInfo.rememberPwd,
                 autoLogin: userInfo.autoLogin && userInfo.autoLogin
             })
-        }).catch(err => {
-            console.warn(err.message);
-        })
+        });
     }    
     loginBtnHandler() {
         // this.setState({
         //     btnEnable: false
         // });
-        storage.save({
-            key: 'userInfo',
-            rawData: {
-                accountID: this.state.accountID,
-                password: this.state.rememberPwd ? this.state.password : '',
-                rememberPwd: this.state.rememberPwd,
-                autoLogin: this.state.autoLogin
-            },
-        });
+        setUserInfo({
+            accountID: this.state.accountID,
+            password: this.state.rememberPwd ? this.state.password : '',
+            rememberPwd: this.state.rememberPwd,
+            autoLogin: this.state.autoLogin
+        })
         login(this.state.accountID, this.state.password, (data)=>{this.props.refreshNetState()});
     }
     rememberPwdHandler() {
