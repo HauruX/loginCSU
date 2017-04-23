@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 function login(accountID, password, callback) {
-    const louginURL = 'http://61.137.86.87:8080/portalNat444/AccessServices/login';
+    const loginURL = 'http://61.137.86.87:8080/portalNat444/AccessServices/login';
     const referURL = 'http://61.137.86.87:8080/portalNat444/main.jsp';
     const brasAddress = '59df7586';
 
@@ -27,7 +27,7 @@ function login(accountID, password, callback) {
             userIntranetAddress: intranetAddress
         }
 
-        timeout(MAX_FETCH_TIME, fetch(louginURL, {
+        timeout(MAX_FETCH_TIME, fetch(loginURL, {
             // 可能需要添加cookie same-origin选项
             method: 'POST',
             credentials: 'same-origin',
