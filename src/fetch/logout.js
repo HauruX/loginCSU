@@ -1,14 +1,9 @@
 import serializeJSON from '../utils/serializeJSON';
-import getIntranetAddress from './intranetAddress';
 
-function logout(intranetAddress) {
+function logout(intranetAddress, callback) {
     const logoutURL = 'http://61.137.86.87:8080/portalNat444/AccessServices/logout'
     const referURL = 'http://61.137.86.87:8080/portalNat444/main2.jsp'
 
-    // getIntranetAddress();
-    ////////tmp
-    intranetAddress = intranetAddress || '10.96.37.104';
-    
     // FormData 使用方式暂不清楚
     // let formData = new FormData();
     let formData = {
@@ -28,6 +23,7 @@ function logout(intranetAddress) {
         return response.json();
     }).then(function(data) {
         console.log(data);
+        callback();
     }).catch(function(err) {});
 }
 
