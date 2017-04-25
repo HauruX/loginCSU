@@ -7,7 +7,7 @@ export default function timeout(ms, promise) {
   })
 }
 
-export const MAX_FETCH_TIME = 1000; // fetch延迟时间 超过该时间视为连接超时
+export const MAX_FETCH_TIME = 2000; // fetch延迟时间 超过该时间视为连接超时
 
 // 使用方式 封装原有fetch 加入超时检测功能，超时时抛出异常
 // timeout(1000, fetch('/hello')).then(function(response) {
