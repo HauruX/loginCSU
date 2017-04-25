@@ -5,41 +5,36 @@ function setUserInfo(userInfo) {
     });
 }
 
-function getUserInfo(callback) {
-    storage.load({
+function getUserInfo() {
+    return storage.load({
         key: 'userInfo',
         autoSync: true,
         syncInBackground: true,
-    }).then(function(userInfo) {
-        callback(userInfo)
     }).catch(err => {
-        console.warn(err.message);
+        // console.warn(err.message);
     })
 }
 
-function setJSESSIONID(jsessionid) {
+function setDataInfo(dataInfo) {
     storage.save({
-        key: 'JSESSIONID',
-        rawData: jsessionid,
+        key: 'dataInfo',
+        rawData: dataInfo,
     });
 }
 
-function getJSESSIONID(callback) {
-    storage.load({
-        key: 'JSESSIONID',
+function getDataInfo(callback) {
+    return storage.load({
+        key: 'dataInfo',
         autoSync: true,
         syncInBackground: true,
-    }).then(function(jsessionid) {
-        callback(jsessionid)
     }).catch(err => {
-        console.warn(err.message);
-        return null;
+        // console.warn(err.message);
     })
 }
 
 export {
     setUserInfo,
     getUserInfo,
-    setJSESSIONID,
-    getJSESSIONID
+    setDataInfo,
+    getDataInfo
 }
