@@ -4,7 +4,7 @@ import timeout, {
     MAX_FETCH_TIME
 } from '../utils/timeoutFetch';
 import {
-    fetchIP192
+    getIntranetIP192
 } from '../fetch/getIP';
 
 import {
@@ -19,7 +19,7 @@ function login(accountID, password, callback) {
     accountID += '@zndx.inter';
     password = encrypt(password);
 
-    fetchIP192().then(function(intranetAddress) {
+    getIntranetIP192().then(function(intranetAddress) {
         let formData = {
             accountID: accountID,
             password: password,

@@ -68,14 +68,18 @@ export default class LoginComponent extends Component {
 
     componentDidMount() {
         // 登陆账户、密码恢复
-        getUserInfo(userInfo => {
+        getUserInfo().then((userInfo) => {
             this.setState({
                 accountID: userInfo.accountID && userInfo.accountID,
                 password: userInfo.password && userInfo.password,
                 rememberPwd: userInfo.rememberPwd && userInfo.rememberPwd,
                 autoLogin: userInfo.autoLogin && userInfo.autoLogin
             })
-        });
+            // 自动登录
+            if (userInfo.autoLogin && userInfo.autoLogin) {
+                this.loginBtnHandler.call(this);
+            }
+        })
     }    
     loginBtnHandler() {
         // this.setState({
