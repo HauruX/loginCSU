@@ -9,14 +9,61 @@ import {
 } from 'react-native';
 
 import LoginComponent from './components/LoginComponent';
+import LogoutComponent from './components/LogoutComponent';
+import getNetState, {
+    JUDGING,
+    NOT_IN_CHINANET,
+    CHINANET_ONLINE,
+    CHINANET_OFFLINE
+} from './fetch/netState';
+
+import './utils/configStore'
 
 export default class Index extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            netState: JUDGING,
+        }
+    }
     render() {
-        return (
-            <View style={styles.container}>
-                <LoginComponent></LoginComponent>
-            </View>
-        );
+        switch (this.state.netState) {
+            case JUDGING:
+                return (
+                    <View style={styles.container}>
+                        <Text>检测网络状态中</Text>
+                    </View>
+                );
+            case NOT_IN_CHINANET:
+                return (
+                    <View style={styles.container}>
+                        <Text>不处于数字中南网络中</Text>
+                    </View>
+                );
+            case CHINANET_ONLINE:
+                return (
+                    <View style={styles.container}>
+                        <LogoutComponent refreshNetState={this.refreshNetState.bind(this)} />    
+                    </View>
+                );
+            case CHINANET_OFFLINE:
+                return (
+                    <View style={styles.container}>
+                        <LoginComponent refreshNetState={this.refreshNetState.bind(this)}></LoginComponent>
+                    </View>
+                );
+        }
+    }
+
+    componentDidMount() {
+        this.refreshNetState();
+    }
+    refreshNetState() {
+        getNetState().then((function(netState) {
+            this.setState({
+                netState: netState
+            })
+        }).bind(this));
     }
 }
 
@@ -26,21 +73,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
-    },
-    btn: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#07c',
-        borderColor: '#005999',
-        height: 50,
-        width: 200,
-        borderRadius: 5
-    },
-    btnUnabled: {
-        backgroundColor: '#bfbfbf',
-    },
-    btnText: {
-        color: 'rgba(255,255,255,0.9)',
-        fontSize: 20
     }
 });
